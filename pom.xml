@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ch.dams333.multiGames</groupId>
+    <artifactId>MultiGames</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.release>8</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+
+     <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/java</directory>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                        <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <finalName>MultiGames</finalName>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <outputDirectory>D:\root\Files\Dev\Java\MC\Servers\serveurTest\plugins</outputDirectory>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.12.2</version>
+            <scope>system</scope>
+            <systemPath>D:\root\Files\Dev\Java\MC\Servers\serveurTest\spigot.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>ch.dams333.inventoryHelper</groupId>
+            <artifactId>InventoryHelper</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>D:\root\Files\Dev\Java\MC\Servers\serveurTest\plugins\InventoryHelper.jar</systemPath>
+        </dependency>
+    </dependencies>
+
+</project>

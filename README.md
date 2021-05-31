@@ -1,0 +1,1 @@
+Actuellement, je concentre mon travaile sur la création du menu de configuration. Une fois cela fait, il sera simple de coder les méchaniques de base grâce au GameVariable

@@ -1,0 +1,5 @@
+name: MultiGames
+author: Dams333
+version: 1.0.0
+main: ch.dams333.multiGames.MultiGames
+commands:
