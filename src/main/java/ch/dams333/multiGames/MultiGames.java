@@ -2,6 +2,7 @@ package ch.dams333.multiGames;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ch.dams333.multiGames.commands.ValidCommand;
 import ch.dams333.multiGames.listeners.actions.setup.SetupItemInteract;
 import ch.dams333.multiGames.listeners.connection.joinServer;
 import ch.dams333.multiGames.utils.state.GameStateManager;
@@ -24,6 +25,8 @@ public class MultiGames extends JavaPlugin{
 
         getServer().getPluginManager().registerEvents(new joinServer(this), this);
         getServer().getPluginManager().registerEvents(new SetupItemInteract(this), this);
+
+        getCommand("valid").setExecutor(new ValidCommand(this));
     }
 
 }
