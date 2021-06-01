@@ -19,6 +19,9 @@ public class GameVariablesManager {
         this.variables.add(new GameVariable("stopBorderTime", 5400));
         this.variables.add(new GameVariable("delayPVP", false));
         this.variables.add(new GameVariable("activateRod", true));
+        this.variables.add(new GameVariable("activateRegen", false));
+        this.variables.add(new GameVariable("startBorderSize", 2000));
+        this.variables.add(new GameVariable("stopBorderSize", 100));
     }
 
     public GameVariable getVariable(String name){

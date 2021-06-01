@@ -8,6 +8,7 @@ import ch.dams333.inventoryHelper.inventory.ContentManager;
 import ch.dams333.inventoryHelper.inventory.InventoryItemStack;
 import ch.dams333.inventoryHelper.inventory.SimpleInventory;
 import ch.dams333.multiGames.MultiGames;
+import ch.dams333.multiGames.utils.inventory.setup.border.BorderSetupInventory;
 import ch.dams333.multiGames.utils.inventory.setup.pvp.PvpSetupInventory;
 import ch.dams333.multiGames.utils.inventory.setup.timer.TimerSetupInventory;
 import ch.dams333.multiGames.utils.state.GameState;
@@ -35,7 +36,7 @@ public class BaseSetupInventory {
         contentManager.setDefaultItem(53, glassItem);
 
         contentManager.setDefaultItem(2, new InventoryItemStack(Material.BARRIER, ChatColor.GOLD + "Gestion de la bordure").setInteractionMethod((player, action) -> {
-
+            BorderSetupInventory.open(p);
         }));
 
         contentManager.setDefaultItem(6, new InventoryItemStack(Material.CHEST, ChatColor.GOLD + "Gestion des items").setInteractionMethod((player, action) -> {

@@ -22,26 +22,26 @@ public class PvpSetupInventory {
     public static void open(Player p){
         ContentManager contentManager = new ContentManager();
 
-        contentManager.setItemForStep(1, 0, new InventoryItemStack(Material.DIAMOND_SWORD, ChatColor.GOLD + "PVP sans délai", Arrays.asList(ChatColor.GRAY + "Clique gauche pour sélectionner")).setInteractionMethod((player, action) -> {
+        contentManager.setItemForStep(1, 0, new InventoryItemStack(Material.DIAMOND_SWORD, ChatColor.GOLD + "PVP sans délai: Non sélectionné", Arrays.asList(ChatColor.GRAY + "Clique gauche pour sélectionner")).setInteractionMethod((player, action) -> {
             contentManager.changeState(1, 1);
             contentManager.changeState(2, 0);
             contentManager.getInventory().update(p);
             MultiGames.INSTANCE.gameVariablesManager.setValue("delayPVP", false);
         }));
-        ItemStack noDelayEncanchanted = ItemCreator.create(Material.DIAMOND_SWORD, ChatColor.GOLD + "PVP sans délai", Arrays.asList(ChatColor.GRAY + "Clique gauche pour sélectionner"));
+        ItemStack noDelayEncanchanted = ItemCreator.create(Material.DIAMOND_SWORD, ChatColor.GOLD + "PVP sans délai: Sélectionné", Arrays.asList(ChatColor.GRAY + "Clique gauche pour sélectionner"));
         ItemMeta m = noDelayEncanchanted.getItemMeta();
         m.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
         m.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         noDelayEncanchanted.setItemMeta(m);
         contentManager.setItemForStep(1, 1, new InventoryItemStack(noDelayEncanchanted));
 
-        contentManager.setItemForStep(2, 0, new InventoryItemStack(Material.IRON_SWORD, ChatColor.GOLD + "PVP avec délai", Arrays.asList(ChatColor.GRAY + "Clique gauche pour sélectionner")).setInteractionMethod((player, action) -> {
+        contentManager.setItemForStep(2, 0, new InventoryItemStack(Material.IRON_SWORD, ChatColor.GOLD + "PVP avec délai: Non Sélectionné", Arrays.asList(ChatColor.GRAY + "Clique gauche pour sélectionner")).setInteractionMethod((player, action) -> {
             contentManager.changeState(2, 1);
             contentManager.changeState(1, 0);
             contentManager.getInventory().update(p);
             MultiGames.INSTANCE.gameVariablesManager.setValue("delayPVP", true);
         }));
-        ItemStack delayEncanchanted = ItemCreator.create(Material.IRON_SWORD, ChatColor.GOLD + "PVP avec délai", Arrays.asList(ChatColor.GRAY + "Clique gauche pour sélectionner"));
+        ItemStack delayEncanchanted = ItemCreator.create(Material.IRON_SWORD, ChatColor.GOLD + "PVP avec délai: Sélectionné", Arrays.asList(ChatColor.GRAY + "Clique gauche pour sélectionner"));
         ItemMeta m2 = delayEncanchanted.getItemMeta();
         m2.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
         m2.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -50,20 +50,31 @@ public class PvpSetupInventory {
 
 
 
-        contentManager.setItemForStep(6, 0, new InventoryItemStack(Material.FISHING_ROD, ChatColor.GOLD + "Canne à pêche", Arrays.asList(ChatColor.GRAY + "Clique gauche pour switcher")).setInteractionMethod((player, action) -> {
-            contentManager.changeState(6, 1);
+        contentManager.setItemForStep(4, 0, new InventoryItemStack(Material.FISHING_ROD, ChatColor.GOLD + "Canne à pêche: Désactivée", Arrays.asList(ChatColor.GRAY + "Clique gauche pour switcher")).setInteractionMethod((player, action) -> {
+            contentManager.changeState(4, 1);
             contentManager.getInventory().update(p);
             MultiGames.INSTANCE.gameVariablesManager.setValue("activateRod", true);
         }));
-        ItemStack rodEnchanted = ItemCreator.create(Material.FISHING_ROD, ChatColor.GOLD + "Canne à pêche", Arrays.asList(ChatColor.GRAY + "Clique gauche pour switcher"));
+        ItemStack rodEnchanted = ItemCreator.create(Material.FISHING_ROD, ChatColor.GOLD + "Canne à pêche: Activée", Arrays.asList(ChatColor.GRAY + "Clique gauche pour switcher"));
         ItemMeta m3 = rodEnchanted.getItemMeta();
         m3.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
         m3.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         rodEnchanted.setItemMeta(m3);
-        contentManager.setItemForStep(6, 1, new InventoryItemStack(rodEnchanted).setInteractionMethod((player, action) -> {
-            contentManager.changeState(6, 0);
+        contentManager.setItemForStep(4, 1, new InventoryItemStack(rodEnchanted).setInteractionMethod((player, action) -> {
+            contentManager.changeState(4, 0);
             contentManager.getInventory().update(p);
             MultiGames.INSTANCE.gameVariablesManager.setValue("activateRod", false);
+        }));
+
+        contentManager.setItemForStep(6, 0, new InventoryItemStack(Material.GOLDEN_APPLE, ChatColor.GOLD + "Régénération naturelle: Désactivée", Arrays.asList(ChatColor.GRAY + "Clique gauche pour switcher")).setInteractionMethod((player, action) -> {
+            contentManager.changeState(6, 1);
+            contentManager.getInventory().update(p);
+            MultiGames.INSTANCE.gameVariablesManager.setValue("activateRegen", true);
+        }));
+        contentManager.setItemForStep(6, 1, new InventoryItemStack(Material.GOLDEN_APPLE, (byte) 1, 1, ChatColor.GOLD + "Régénération naturelle: Activée", Arrays.asList(ChatColor.GRAY + "Clique gauche pour switcher")).setInteractionMethod((player, action) -> {
+            contentManager.changeState(6, 0);
+            contentManager.getInventory().update(p);
+            MultiGames.INSTANCE.gameVariablesManager.setValue("activateRegen", false);
         }));
 
         contentManager.setDefaultItem(8, new InventoryItemStack(Material.ARROW, ChatColor.GRAY + "Retour dans le menu").setInteractionMethod((player, action) -> {
@@ -88,6 +99,11 @@ public class PvpSetupInventory {
             contentManager.changeState(2, 0);
         }
         if(MultiGames.INSTANCE.gameVariablesManager.getVariable("activateRod").getBooleanValue()){
+            contentManager.changeState(4, 1);
+        }else{
+            contentManager.changeState(4, 0);
+        }
+        if(MultiGames.INSTANCE.gameVariablesManager.getVariable("activateRegen").getBooleanValue()){
             contentManager.changeState(6, 1);
         }else{
             contentManager.changeState(6, 0);
