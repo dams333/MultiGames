@@ -22,6 +22,8 @@ public class GameVariablesManager {
         this.variables.add(new GameVariable("activateRegen", false));
         this.variables.add(new GameVariable("startBorderSize", 2000));
         this.variables.add(new GameVariable("stopBorderSize", 100));
+        this.variables.add(new GameVariable("activateNether", true));
+        this.variables.add(new GameVariable("activateEnd", false));
     }
 
     public GameVariable getVariable(String name){

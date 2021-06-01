@@ -8,6 +8,7 @@ import ch.dams333.inventoryHelper.inventory.ContentManager;
 import ch.dams333.inventoryHelper.inventory.InventoryItemStack;
 import ch.dams333.inventoryHelper.inventory.SimpleInventory;
 import ch.dams333.multiGames.MultiGames;
+import ch.dams333.multiGames.utils.inventory.dimensions.DimensionsSetupInventory;
 import ch.dams333.multiGames.utils.inventory.setup.border.BorderSetupInventory;
 import ch.dams333.multiGames.utils.inventory.setup.pvp.PvpSetupInventory;
 import ch.dams333.multiGames.utils.inventory.setup.timer.TimerSetupInventory;
@@ -48,7 +49,7 @@ public class BaseSetupInventory {
         }));
 
         contentManager.setDefaultItem(16, new InventoryItemStack(Material.ENDER_PORTAL_FRAME, ChatColor.GOLD + "Gestion des dimensions").setInteractionMethod((player, action) -> {
-
+            DimensionsSetupInventory.open(p);
         }));
 
         contentManager.setDefaultItem(18, new InventoryItemStack(Material.WATCH, ChatColor.GOLD + "Gestion des Timers").setInteractionMethod((player, action) -> {
