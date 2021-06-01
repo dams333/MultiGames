@@ -1,4 +1,4 @@
-package ch.dams333.multiGames.utils.inventory.dimensions;
+package ch.dams333.multiGames.utils.inventory.setup.dimensions;
 
 import java.util.Arrays;
 
