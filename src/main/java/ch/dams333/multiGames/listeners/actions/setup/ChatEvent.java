@@ -1,28 +1,48 @@
 package ch.dams333.multiGames.listeners.actions.setup;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import ch.dams333.multiGames.MultiGames;
 import ch.dams333.multiGames.utils.inventory.setup.other.OtherInventorySetup;
-import net.md_5.bungee.api.ChatColor;
 
 public class ChatEvent implements Listener{
  
+    private MultiGames main;
+
+    public ChatEvent(MultiGames main) {
+        this.main = main;
+    }
+
     @EventHandler
     public void chat(AsyncPlayerChatEvent e){
-        if(MultiGames.INSTANCE.scoreboardModifiers.containsKey(e.getPlayer())){
-            if(MultiGames.INSTANCE.scoreboardModifiers.get(e.getPlayer()).isWriting){
+        Player p = e.getPlayer();
+        String message = e.getMessage();
+        if(main.scoreboardModifiers.containsKey(p)){
+            if(main.scoreboardModifiers.get(p).isWriting){
+
                 e.setCancelled(true);
-                MultiGames.INSTANCE.scoreboardModifiers.get(e.getPlayer()).writted(e.getPlayer(), e.getMessage());
+
+                main.getServer().getScheduler().runTask(main, new Runnable() {
+                    @Override
+                    public void run() {
+                        main.scoreboardModifiers.get(p).writted(p, message);
+                    }
+                });
             }
-        }
-        if(MultiGames.INSTANCE.gameVariablesManager.isChangingName != null){
-            if(MultiGames.INSTANCE.gameVariablesManager.isChangingName == e.getPlayer()){
+        }else if(main.gameVariablesManager.isChangingName != null){
+            if(main.gameVariablesManager.isChangingName == p){
+                main.gameVariablesManager.setValue("gameName", message);
                 e.setCancelled(true);
-                MultiGames.INSTANCE.gameVariablesManager.setValue("gameName", e.getMessage());
-                OtherInventorySetup.open(e.getPlayer());
+
+                main.getServer().getScheduler().runTask(main, new Runnable() {
+                    @Override
+                    public void run() {
+                        OtherInventorySetup.open(p);
+                    }
+                });
             }
         }
     }

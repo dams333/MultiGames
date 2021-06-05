@@ -37,7 +37,7 @@ public class MultiGames extends JavaPlugin{
 
         getServer().getPluginManager().registerEvents(new joinServer(this), this);
         getServer().getPluginManager().registerEvents(new SetupItemInteract(this), this);
-        getServer().getPluginManager().registerEvents(new ChatEvent(), this);
+        getServer().getPluginManager().registerEvents(new ChatEvent(this), this);
 
         getCommand("valid").setExecutor(new ValidCommand(this));
     }
