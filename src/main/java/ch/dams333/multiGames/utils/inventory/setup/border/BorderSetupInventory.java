@@ -39,7 +39,7 @@ public class BorderSetupInventory {
 
         SimpleInventory inv = SimpleInventory.builder()
                                 .id("BorderSetup")
-                                .title(ChatColor.GOLD + "Gérer la vordure")
+                                .title(ChatColor.GOLD + "Gérer la bordure")
                                 .rows(1)
                                 .closeable(true)
                                 .setContentManager(contentManager)
