@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.potion.PotionEffect;
 
 import ch.dams333.multiGames.MultiGames;
 import ch.dams333.multiGames.utils.items.ItemCreator;
@@ -26,6 +27,9 @@ public class joinServer implements Listener{
         if(main.gameStateManager.isState(GameState.SETUP)){
             //Game setupping
             p.getInventory().clear();
+            for(PotionEffect effect : p.getActivePotionEffects()){
+                p.removePotionEffect(effect.getType());
+            }
             if(p.hasPermission("multigames.admin")){
                 p.setGameMode(GameMode.CREATIVE);
                 p.getInventory().setItem(4, ItemCreator.create(Material.CHEST, ChatColor.GOLD + "Gérer la partie"));

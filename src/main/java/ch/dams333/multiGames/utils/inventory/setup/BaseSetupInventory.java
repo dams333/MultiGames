@@ -102,12 +102,14 @@ public class BaseSetupInventory {
 
         if(MultiGames.INSTANCE.gameStateManager.isState(GameState.SETUP)){
             contentManager.setDefaultItem(49, new InventoryItemStack(Material.EMERALD_BLOCK, ChatColor.GOLD + "Démarrage de la partie").setInteractionMethod((player, action) -> {
-
+                p.closeInventory();
+                MultiGames.INSTANCE.gameManager.start();
             }));
         }
         if(MultiGames.INSTANCE.gameStateManager.isState(GameState.STARTING)){
             contentManager.setDefaultItem(49, new InventoryItemStack(Material.REDSTONE_BLOCK, ChatColor.GOLD + "Annuler le démarrage").setInteractionMethod((player, action) -> {
-
+                p.closeInventory();
+                MultiGames.INSTANCE.gameManager.cancelStart();
             }));
         }
 

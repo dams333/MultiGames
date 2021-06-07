@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import ch.dams333.multiGames.commands.ValidCommand;
+import ch.dams333.multiGames.core.game.GameManager;
+import ch.dams333.multiGames.core.teams.TeamsManager;
 import ch.dams333.multiGames.listeners.actions.setup.ChatEvent;
 import ch.dams333.multiGames.listeners.actions.setup.SetupItemInteract;
 import ch.dams333.multiGames.listeners.connection.joinServer;
@@ -19,6 +21,9 @@ public class MultiGames extends JavaPlugin{
  
     public GameStateManager gameStateManager;
     public GameVariablesManager gameVariablesManager;
+    public GameManager gameManager;
+    public TeamsManager teamsManager;
+
     public Map<Player, WorldGenerator> worldGenerators;
     public Map<Player, ScoreboardModifier> scoreboardModifiers;
 
@@ -34,6 +39,8 @@ public class MultiGames extends JavaPlugin{
 
         gameStateManager = new GameStateManager();
         gameVariablesManager = new GameVariablesManager();
+        gameManager = new GameManager(this);
+        teamsManager = new TeamsManager(this);
 
         getServer().getPluginManager().registerEvents(new joinServer(this), this);
         getServer().getPluginManager().registerEvents(new SetupItemInteract(this), this);
