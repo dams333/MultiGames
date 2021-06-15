@@ -70,8 +70,12 @@ public class ScoreboardManager implements Listener{
                 toModify = toModify.replaceAll("&", "§");
                 toModify = toModify.replaceAll("%COMPLETE_TIMER%", TimeUtils.secondToCompleteString(time, ":", true));
                 toModify = toModify.replaceAll("%TIMER%", TimeUtils.secondToString(time, ":", true));
-                toModify = toModify.replaceAll("%IN_GAME_PLAYERS%", String.valueOf(main.gameManager.getInGamePlayers().size()));
+                toModify = toModify.replaceAll("%IN_GAME_PLAYERS_COUNT%", String.valueOf(main.gameManager.getInGamePlayers().size()));
                 toModify = toModify.replaceAll("%BORDER_RADIUS%", String.valueOf(main.gameManager.getBorderManager().getSize()));
+                toModify = toModify.replaceAll("%EPISODE%", String.valueOf(main.gameManager.getEpisode()));
+                toModify = toModify.replaceAll("%STARTING_PLAYERS_COUNT%", String.valueOf(main.gameManager.getStarterPlayerCount()));
+                toModify = toModify.replaceAll("%STARTING_TEAMS_COUNT%", String.valueOf(main.teamsManager.getStartingTeamsCount()));
+                toModify = toModify.replaceAll("%TEAMS_COUNT%", String.valueOf(main.teamsManager.getTeamsCount()));
 
                 viewScoreboard.add(toModify);
             }

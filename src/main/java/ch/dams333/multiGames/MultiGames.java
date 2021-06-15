@@ -12,6 +12,8 @@ import ch.dams333.multiGames.core.teams.TeamsManager;
 import ch.dams333.multiGames.listeners.actions.setup.ChatEvent;
 import ch.dams333.multiGames.listeners.actions.setup.SetupItemInteract;
 import ch.dams333.multiGames.listeners.connection.joinServer;
+import ch.dams333.multiGames.listeners.damage.PlayerDamage;
+import ch.dams333.multiGames.listeners.damage.PlayerDamageByEntity;
 import ch.dams333.multiGames.utils.scoreboard.ScoreboardModifier;
 import ch.dams333.multiGames.utils.state.GameStateManager;
 import ch.dams333.multiGames.utils.variables.GameVariablesManager;
@@ -45,6 +47,8 @@ public class MultiGames extends JavaPlugin{
         getServer().getPluginManager().registerEvents(new joinServer(this), this);
         getServer().getPluginManager().registerEvents(new SetupItemInteract(this), this);
         getServer().getPluginManager().registerEvents(new ChatEvent(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerDamage(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerDamageByEntity(this), this);
 
         getCommand("valid").setExecutor(new ValidCommand(this));
     }

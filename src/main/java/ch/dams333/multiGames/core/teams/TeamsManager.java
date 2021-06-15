@@ -14,4 +14,12 @@ public class TeamsManager {
         return false;
     }
 
+    public int getStartingTeamsCount() {
+        return 0;
+    }
+
+    public int getTeamsCount() {
+        return 0;
+    }
+
 }

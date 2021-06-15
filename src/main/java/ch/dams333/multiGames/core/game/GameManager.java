@@ -30,6 +30,11 @@ public class GameManager {
     private ScoreboardManager scoreboardManager;
     private World gameWorld;
     private List<Player> inGamePlayers;
+    private int starterPlayerCount;
+
+    public int getStarterPlayerCount() {
+        return this.starterPlayerCount;
+    }
 
     public GameManager(MultiGames main) {
         this.main = main;
@@ -40,6 +45,11 @@ public class GameManager {
 
     private StartingTask startingTask;
     private GameTask gameTask;
+
+
+    public GameTask getGameTask() {
+        return this.gameTask;
+    }
 
 
     public List<Player> getInGamePlayers() {
@@ -79,8 +89,11 @@ public class GameManager {
             startingTask.cancel();
             this.startingTask = null;
         }
+
         main.gameStateManager.setState(GameState.TELEPORTATION);
         Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "Démarrage de la téléportation...");
+
+        starterPlayerCount = Bukkit.getOnlinePlayers().size();
 
         for(Player p : Bukkit.getOnlinePlayers()){
             inGamePlayers.add(p);
@@ -151,6 +164,14 @@ public class GameManager {
     }
     private int random(int min, int max){
         return (int)(Math.random() * ((max - min) + 1)) + min;
+    }
+
+    public int getEpisode() {
+        if(gameTask != null){
+            return this.gameTask.getEpisode();
+        }else{
+            return 1;
+        }
     }
     
 }
