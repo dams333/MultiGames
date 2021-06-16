@@ -69,6 +69,11 @@ public class OtherInventorySetup {
         }));
 
         contentManager.setDefaultItem(5, new InventoryItemStack(Material.PAPER, ChatColor.GOLD + "Choisir le nom de la partie", Arrays.asList(ChatColor.GRAY + "Nom actuel:", ChatColor.GRAY + MultiGames.INSTANCE.gameVariablesManager.getVariable("gameName").getStringValue())).setInteractionMethod((player, action) -> {
+            
+            if(MultiGames.INSTANCE.scoreboardModifiers.containsKey(p)){
+                MultiGames.INSTANCE.scoreboardModifiers.remove(p);
+            }
+            
             MultiGames.INSTANCE.gameVariablesManager.isChangingName = p;
             p.closeInventory();
             p.sendMessage(ChatColor.LIGHT_PURPLE + "Entrer le nom de la partie dans le chat:");

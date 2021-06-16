@@ -14,6 +14,7 @@ import ch.dams333.multiGames.utils.inventory.setup.dimensions.DimensionsSetupInv
 import ch.dams333.multiGames.utils.inventory.setup.drops.DropsSetupInventory;
 import ch.dams333.multiGames.utils.inventory.setup.items.ItemsSetupInventory;
 import ch.dams333.multiGames.utils.inventory.setup.other.OtherInventorySetup;
+import ch.dams333.multiGames.utils.inventory.setup.preconfiguration.PreconfigurationSetupInventory;
 import ch.dams333.multiGames.utils.inventory.setup.pvp.PvpSetupInventory;
 import ch.dams333.multiGames.utils.inventory.setup.scoreboard.ScoreboardSetupInventory;
 import ch.dams333.multiGames.utils.inventory.setup.teams.TeamsSetupInventory;
@@ -114,7 +115,7 @@ public class BaseSetupInventory {
         }
 
         contentManager.setDefaultItem(51, new InventoryItemStack(Material.STAINED_GLASS, ChatColor.GOLD + "Préconfigurations").setInteractionMethod((player, action) -> {
-
+            PreconfigurationSetupInventory.open(p);
         }));
 
         SimpleInventory inv = SimpleInventory.builder()

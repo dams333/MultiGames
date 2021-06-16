@@ -3,18 +3,82 @@ package ch.dams333.multiGames.utils.variables;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-import net.minecraft.server.v1_12_R1.ItemStack;
+import ch.dams333.multiGames.MultiGames;
+import ch.dams333.multiGames.utils.inventory.setup.preconfiguration.PreconfigurationSetupInventory;
 
 public class GameVariablesManager {
 
     private List<GameVariable> variables;
+    private List<GameConfiguration> configurations;
 
     public GameVariablesManager() {
         variables = new ArrayList<>();
+        configurations = new ArrayList<>();
         initVariables();
+        loadConfig();
+    }
+
+    private void loadConfig() {
+
+        MultiGames main = MultiGames.INSTANCE;
+
+        for(String stringUUID : main.getConfig().getKeys(false)){
+            ConfigurationSection sec = main.getConfig().getConfigurationSection(stringUUID);
+            String name = sec.getString("Name");
+            Material mat = Material.valueOf(sec.getString("Material"));
+            List<GameVariable> configVars = new ArrayList<>();
+            ConfigurationSection varSec = sec.getConfigurationSection("Variables");
+
+            for(String varName : varSec.getKeys(false)){
+                if(!varSec.isConfigurationSection(varName)){
+                    Object obj = varSec.get(varName);
+                    if(obj instanceof String){
+                        configVars.add(new GameVariable(varName, (String) obj));
+                    }else if(obj instanceof Integer){
+                        configVars.add(new GameVariable(varName, (Integer) obj));
+                    }else if(obj instanceof Double){
+                        configVars.add(new GameVariable(varName, (Double) obj));
+                    }else if(obj instanceof Float){
+                        configVars.add(new GameVariable(varName, (Float) obj));
+                    }else if(obj instanceof Boolean){
+                        configVars.add(new GameVariable(varName, (Boolean) obj));
+                    }
+                }else{
+                    if(varName.equals("startInventory")){
+                        ConfigurationSection invSec = varSec.getConfigurationSection(varName);
+
+                        List<ItemStack> items = new ArrayList<>();
+                        for(String i : invSec.getKeys(false)){
+                            ItemStack it = invSec.getItemStack(i);
+                            items.add(it);
+                        }
+
+                        configVars.add(new GameVariable(varName, items));
+                    }
+
+                    if(varName.equals("scoreboard")){
+                        ConfigurationSection scoreboardSec = varSec.getConfigurationSection(varName);
+                        HashMap<Integer, String> scoreboard = new HashMap<Integer, String>();
+                        for(String i : scoreboardSec.getKeys(false)){
+                            scoreboard.put(Integer.parseInt(i), scoreboardSec.getString(i));
+                        }
+
+                        configVars.add(new GameVariable(varName, scoreboard));
+                    }
+                }
+            }
+            GameConfiguration config = new GameConfiguration(UUID.fromString(stringUUID), name, mat, configVars);
+            this.configurations.add(config);
+        }
+
     }
 
     public void initVariables(){
@@ -79,5 +143,49 @@ public class GameVariablesManager {
     }
 
     public Player isChangingName;
+    public Player isCreatingConfig;
+
+    public List<GameVariable> getVariables() {
+        return this.variables;
+    }
+
+    public void createConfig(Player p, Material mat, String name) {
+        this.isCreatingConfig = null;
+        GameConfiguration config = new GameConfiguration(name, mat);
+        configurations.add(config);
+        config.save();
+        PreconfigurationSetupInventory.open(p);
+    }
+
+
+    public List<GameConfiguration> getConfigurations() {
+        return this.configurations;
+    }
+
+    public void loadConfiguration(UUID uuid) {
+        Map<String, Object> vars = new HashMap<>();
+        for(GameConfiguration config : this.configurations){
+            if(config.getUuid().equals(uuid)){
+                for(GameVariable var : config.getVariables()){
+                    vars.put(var.getName(), var.getValue());
+                }
+            }
+        }
+        for(String var : vars.keySet()){
+            this.setValue(var, vars.get(var));
+        }
+    }
+
+    public void removeConfiguration(UUID uuid) {
+        for(GameConfiguration config : this.configurations){
+            if(config.getUuid().equals(uuid)){
+                this.configurations.remove(config);
+                MultiGames.INSTANCE.getConfig().set(config.getUuid().toString(), null);
+                MultiGames.INSTANCE.saveConfig();
+                break;
+            }
+        }
+    }
+
     
 }

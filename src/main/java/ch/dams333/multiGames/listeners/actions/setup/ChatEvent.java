@@ -1,5 +1,7 @@
 package ch.dams333.multiGames.listeners.actions.setup;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -43,6 +45,21 @@ public class ChatEvent implements Listener{
                         OtherInventorySetup.open(p);
                     }
                 });
+            }
+        }else if(main.gameVariablesManager.isCreatingConfig != null){
+            if(main.gameVariablesManager.isCreatingConfig == p){
+                e.setCancelled(true);
+                if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().getType() != Material.AIR){
+                    main.getServer().getScheduler().runTask(main, new Runnable() {
+                        @Override
+                        public void run() {
+                            MultiGames.INSTANCE.gameVariablesManager.createConfig(p, p.getInventory().getItemInMainHand().getType(), e.getMessage());
+                            p.getInventory().remove(p.getInventory().getItemInMainHand());
+                        }
+                    });
+                }else{
+                    p.sendMessage(ChatColor.LIGHT_PURPLE + "Veuillez mettre un item dans votre main et répéter l'opération");
+                }
             }
         }
     }
