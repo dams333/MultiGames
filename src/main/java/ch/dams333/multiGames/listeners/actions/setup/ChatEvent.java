@@ -43,6 +43,7 @@ public class ChatEvent implements Listener{
                     @Override
                     public void run() {
                         OtherInventorySetup.open(p);
+                        main.gameVariablesManager.isChangingName = null;
                     }
                 });
             }
@@ -55,6 +56,7 @@ public class ChatEvent implements Listener{
                         public void run() {
                             MultiGames.INSTANCE.gameVariablesManager.createConfig(p, p.getInventory().getItemInMainHand().getType(), e.getMessage());
                             p.getInventory().remove(p.getInventory().getItemInMainHand());
+                            main.gameVariablesManager.isCreatingConfig = null;
                         }
                     });
                 }else{
