@@ -42,7 +42,7 @@ public class TeamsSetupInventory {
             if(action == InventoryAction.PICKUP_ALL){
                 //+
                 current++;
-                if(current > 54) current = 54;
+                if(current > 44) current = 44;
                 MultiGames.INSTANCE.gameVariablesManager.setValue("teamsNumber", current);
                 contentManager.changeItemName(2, 1, ChatColor.GOLD + "Équipes: " + current);
                 contentManager.changeItemQuantity(2, 1, current);
@@ -88,6 +88,9 @@ public class TeamsSetupInventory {
                                 .rows(1)
                                 .closeable(true)
                                 .setContentManager(contentManager)
+                                .onClose((player) -> {
+                                    MultiGames.INSTANCE.teamsManager.generateTeams();
+                                })
                                 .build();
 
         inv.open(p);

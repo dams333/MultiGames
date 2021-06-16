@@ -190,5 +190,9 @@ public class GameManager {
             return 1;
         }
     }
+
+    public boolean isAlive(Player p) {
+        return this.inGamePlayers.contains(p);
+    }
     
 }

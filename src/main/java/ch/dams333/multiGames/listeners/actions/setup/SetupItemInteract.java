@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import ch.dams333.multiGames.MultiGames;
 import ch.dams333.multiGames.utils.inventory.setup.BaseSetupInventory;
+import ch.dams333.multiGames.utils.inventory.teams.TeamsSelectorInventory;
 import ch.dams333.multiGames.utils.state.GameState;
 
 public class SetupItemInteract implements Listener{
@@ -29,6 +30,9 @@ public class SetupItemInteract implements Listener{
                 Player p = e.getPlayer();
                 if(it.getType() == Material.CHEST && it.hasItemMeta() && it.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Gérer la partie")){
                     BaseSetupInventory.open(p);
+                }
+                if(it.getType() == Material.BANNER && it.hasItemMeta() && it.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Choisir une équipe")){
+                    TeamsSelectorInventory.open(p);
                 }
             }
         }
