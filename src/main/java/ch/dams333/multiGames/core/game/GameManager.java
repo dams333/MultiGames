@@ -102,6 +102,8 @@ public class GameManager {
             p.setGameMode(GameMode.SURVIVAL);
             p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 999999, 1));
             p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 999999, 255));
+            p.setHealth(20);
+            p.setFoodLevel(20);
         }
 
         borderManager.setupBorder();
@@ -111,6 +113,16 @@ public class GameManager {
             for(Player p : Bukkit.getOnlinePlayers()){
                 spreadPlayer(p);
             }
+        }
+
+        if(main.gameVariablesManager.getVariable("activateRegen").getBooleanValue()){
+            gameWorld.setGameRuleValue("naturalRegeneration", "true");
+            Bukkit.getWorld("world_nether").setGameRuleValue("naturalRegeneration", "true");
+            Bukkit.getWorld("world_the_end").setGameRuleValue("naturalRegeneration", "true");
+        }else{
+            gameWorld.setGameRuleValue("naturalRegeneration", "false");
+            Bukkit.getWorld("world_nether").setGameRuleValue("naturalRegeneration", "false");
+            Bukkit.getWorld("world_the_end").setGameRuleValue("naturalRegeneration", "false");
         }
 
         Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "Téléportation terminée, démarrage de la partie dans 5 secondes...");
@@ -124,6 +136,11 @@ public class GameManager {
 
     private void finishStarting() {
         for(Player p : Bukkit.getOnlinePlayers()){
+            if(main.gameVariablesManager.getVariable("delayPVP").getBooleanValue()){
+                p.getAttribute(org.bukkit.attribute.Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4.0D);
+            }else{
+                p.getAttribute(org.bukkit.attribute.Attribute.GENERIC_ATTACK_SPEED).setBaseValue(16.0D);
+            }
             for(PotionEffect effect : p.getActivePotionEffects()){
                 p.removePotionEffect(effect.getType());
             }
