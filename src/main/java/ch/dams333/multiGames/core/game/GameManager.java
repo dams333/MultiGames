@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -169,6 +170,21 @@ public class GameManager {
             }
             for(PotionEffect effect : p.getActivePotionEffects()){
                 p.removePotionEffect(effect.getType());
+            }
+            for(ItemStack it : (List<ItemStack>) main.gameVariablesManager.getVariable("startInventory").getValue()){
+                if(it != null){
+                    if(it.getType() == Material.LEATHER_BOOTS || it.getType() == Material.CHAINMAIL_BOOTS || it.getType() == Material.IRON_BOOTS || it.getType() == Material.GOLD_BOOTS || it.getType() == Material.DIAMOND_BOOTS){
+                        p.getInventory().setBoots(it);
+                    }else if(it.getType() == Material.LEATHER_LEGGINGS || it.getType() == Material.CHAINMAIL_LEGGINGS || it.getType() == Material.IRON_LEGGINGS || it.getType() == Material.GOLD_LEGGINGS || it.getType() == Material.DIAMOND_LEGGINGS){
+                        p.getInventory().setLeggings(it);
+                    }else if(it.getType() == Material.LEATHER_CHESTPLATE || it.getType() == Material.CHAINMAIL_CHESTPLATE || it.getType() == Material.IRON_CHESTPLATE || it.getType() == Material.GOLD_CHESTPLATE || it.getType() == Material.DIAMOND_CHESTPLATE){
+                        p.getInventory().setChestplate(it);
+                    }else if(it.getType() == Material.LEATHER_HELMET || it.getType() == Material.CHAINMAIL_HELMET || it.getType() == Material.IRON_HELMET || it.getType() == Material.GOLD_HELMET || it.getType() == Material.DIAMOND_HELMET){
+                        p.getInventory().setHelmet(it);
+                    }else{
+                        p.getInventory().addItem(it);
+                    }
+                }
             }
         }
         Bukkit.getServer().getPluginManager().callEvent(new GameStartEvent());
