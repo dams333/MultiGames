@@ -40,6 +40,7 @@ public class GameManager {
     public GameManager(MultiGames main) {
         this.main = main;
         borderManager = new BorderManager(main);
+        main.getServer().getPluginManager().registerEvents(borderManager, main);
         scoreboardManager = new ScoreboardManager(main);
         inGamePlayers = new ArrayList<>();
     }

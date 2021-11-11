@@ -105,7 +105,7 @@ public class TeamsManager {
     }
 
     public boolean activatedTeams(){
-        return teamsCount > 0;
+        return teamsCount > 1;
     }
 
     public int getStartingTeamsCount() {
