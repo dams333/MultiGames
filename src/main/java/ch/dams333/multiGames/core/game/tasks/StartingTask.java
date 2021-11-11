@@ -10,11 +10,12 @@ public class StartingTask extends BukkitRunnable{
 
     private MultiGames main;
     private int time;
+    private boolean debug;
 
-    public StartingTask(MultiGames main) {
+    public StartingTask(MultiGames main, int startTime, boolean debug) {
         this.main = main;
-        //this.time = 10;
-        this.time = 1; //DEBUG
+        this.time = startTime;
+        this.debug = debug;
     }
 
     @Override
@@ -22,7 +23,7 @@ public class StartingTask extends BukkitRunnable{
         if(time > 0){
             TitleUtils.sendAllTitle(ChatColor.RED + "Démarrage de la partie dans " + time, 25);
         }else{
-            main.gameManager.startTeleportation();
+            main.gameManager.startTeleportation(debug);
         }
 
         time--;

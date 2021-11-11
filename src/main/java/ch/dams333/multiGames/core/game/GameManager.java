@@ -18,6 +18,7 @@ import ch.dams333.multiGames.core.game.border.BorderManager;
 import ch.dams333.multiGames.core.game.tasks.GameTask;
 import ch.dams333.multiGames.core.game.tasks.StartingTask;
 import ch.dams333.multiGames.core.scoreboard.ScoreboardManager;
+import ch.dams333.multiGames.core.teams.Team;
 import ch.dams333.multiGames.utils.events.GameStartEvent;
 import ch.dams333.multiGames.utils.show.TitleUtils;
 import ch.dams333.multiGames.utils.state.GameState;
@@ -70,9 +71,17 @@ public class GameManager {
 
     public void start() {
         main.gameStateManager.setState(GameState.STARTING);
-        StartingTask task = new StartingTask(main);
+        StartingTask task = new StartingTask(main, 10, false);
         this.startingTask = task;
         task.runTaskTimer(main, 20, 20);
+    }
+
+    public void debugStart()
+    {
+        main.gameStateManager.setState(GameState.STARTING);
+        StartingTask task = new StartingTask(main, 1, true);
+        this.startingTask = task;
+        task.runTaskTimer(main, 1, 1);    
     }
 
     public void cancelStart() {
@@ -84,10 +93,14 @@ public class GameManager {
         }
     }
 
-    public void startTeleportation() {
+    public void startTeleportation(boolean debug) {
         if(this.startingTask != null){
             startingTask.cancel();
             this.startingTask = null;
+        }
+
+        if(main.gameVariablesManager.getVariable("randomiseTeams").getBooleanValue()){
+            main.teamsManager.randomizeTeams();
         }
 
         main.gameStateManager.setState(GameState.TELEPORTATION);
@@ -113,6 +126,18 @@ public class GameManager {
             for(Player p : Bukkit.getOnlinePlayers()){
                 spreadPlayer(p);
             }
+        }else{
+            for(Team team : main.teamsManager.getTeams()){
+                if(team.getPlayers().size() > 0){
+                    TitleUtils.sendAllActionBar(ChatColor.GRAY + "Téléportation de l'équipe " + team.getChatColor() + team.getTag(), 20);
+                    Location spawn = new Location(gameWorld, randomInBorderRange(), 255, randomInBorderRange());
+                    spawn = transformSpawn(spawn);
+                    spawn.add(0, 1, 0);
+                    for(Player p : team.getPlayers()){
+                        p.teleport(spawn);
+                    }
+                }
+            }
         }
 
         if(main.gameVariablesManager.getVariable("activateRegen").getBooleanValue()){
@@ -129,12 +154,12 @@ public class GameManager {
         main.getServer().getScheduler().runTaskLater(main, new Runnable() {
             @Override
             public void run() {
-                finishStarting();
+                finishStarting(debug);
             }
         }, 100);
     }
 
-    private void finishStarting() {
+    private void finishStarting(boolean debug) {
         for(Player p : Bukkit.getOnlinePlayers()){
             if(main.gameVariablesManager.getVariable("delayPVP").getBooleanValue()){
                 p.getAttribute(org.bukkit.attribute.Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4.0D);
@@ -149,7 +174,10 @@ public class GameManager {
         main.gameStateManager.setState(GameState.GAME);
         GameTask task = new GameTask(main);
         this.gameTask = task;
-        task.runTaskTimer(main, 20, 20);
+        if(!debug)
+            task.runTaskTimer(main, 20, 20);
+        else
+            task.runTaskTimer(main, 1, 1);
     }
 
     private void spreadPlayer(Player p){

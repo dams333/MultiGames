@@ -7,3 +7,6 @@ commands:
   valid:
     description: Valide l'inventaire de départ
     permission: multigames.admin
+  debugstart:
+    description: Demarre la partie en mode 'debug'
+    permission: multigames.admin

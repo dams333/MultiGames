@@ -46,6 +46,10 @@ public class TeamsManager {
     }
 
     public void generateTeams(){
+        for(Player p : Bukkit.getOnlinePlayers()){
+            p.setDisplayName(p.getName());
+            p.setPlayerListName(p.getName());
+        }
         this.teams = new ArrayList<>();
         int teamsCount = main.gameVariablesManager.getVariable("teamsNumber").getIntValue();
         this.teamsCount = teamsCount;
@@ -70,8 +74,14 @@ public class TeamsManager {
 
                 this.teams.add(new Team(i, chatColor, tag, banner));
             }
-            for(Player p : Bukkit.getOnlinePlayers()){
-                p.getInventory().setItem(8, ItemCreator.create(Material.BANNER, (byte) 15, ChatColor.GOLD + "Choisir une équipe"));
+            if(!main.gameVariablesManager.getVariable("randomiseTeams").getBooleanValue()){
+                for(Player p : Bukkit.getOnlinePlayers()){
+                    p.getInventory().setItem(8, ItemCreator.create(Material.BANNER, (byte) 15, ChatColor.GOLD + "Choisir une équipe"));
+                }
+            }else{
+                for(Player p : Bukkit.getOnlinePlayers()){
+                    p.getInventory().setItem(8, null);
+                }
             }
         }else{
             for(Player p : Bukkit.getOnlinePlayers()){
@@ -80,12 +90,22 @@ public class TeamsManager {
         }
     }
 
+    public Team getTeam(Player p)
+    {
+        for(Team team : this.teams)
+        {
+            if(team.getPlayers().contains(p))
+                return team;               
+        }
+        return null;
+    }
+
     public List<Team> getTeams() {
         return this.teams;
     }
 
     public boolean activatedTeams(){
-        return teamsCount > 1;
+        return teamsCount > 0;
     }
 
     public int getStartingTeamsCount() {
@@ -119,6 +139,35 @@ public class TeamsManager {
                 break;
             }
         }
+    }
+
+    public void randomizeTeams() {
+        List<Player> availablePlayer = new ArrayList<>();
+        for(Player p : Bukkit.getOnlinePlayers()){
+                availablePlayer.add(p);
+        }
+        int playerByTeam = availablePlayer.size() / teamsCount;
+        for(Team team : this.teams){
+            for(int i = 0; i < playerByTeam; i++){
+                int random = random(0, availablePlayer.size() - 1);
+                team.addPlayer(availablePlayer.get(random));
+                availablePlayer.remove(random);
+            }
+        }
+        if(availablePlayer.size() > 0){
+            for(Team team : this.teams){
+                int random = random(0, availablePlayer.size() - 1);
+                team.addPlayer(availablePlayer.get(random));
+                availablePlayer.remove(random);
+                if(availablePlayer.size() == 0){
+                    break;
+                }
+            }
+        }
+    }
+
+    private int random(int min, int max){
+        return (int)(Math.random() * ((max - min) + 1)) + min;
     }
 
 }

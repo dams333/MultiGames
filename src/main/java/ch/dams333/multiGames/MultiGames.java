@@ -6,6 +6,7 @@ import java.util.Map;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import ch.dams333.multiGames.commands.DebugStartCommand;
 import ch.dams333.multiGames.commands.ValidCommand;
 import ch.dams333.multiGames.core.game.GameManager;
 import ch.dams333.multiGames.core.teams.TeamsManager;
@@ -59,6 +60,7 @@ public class MultiGames extends JavaPlugin{
         getServer().getPluginManager().registerEvents(new FlintDrop(this), this);
 
         getCommand("valid").setExecutor(new ValidCommand(this));
+        getCommand("debugstart").setExecutor(new DebugStartCommand(this));
     }
 
 }

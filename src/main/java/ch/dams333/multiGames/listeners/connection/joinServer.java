@@ -36,7 +36,7 @@ public class joinServer implements Listener{
             }else{
                 p.setGameMode(GameMode.ADVENTURE);
             }
-            if(main.teamsManager.activatedTeams()){
+            if(main.teamsManager.activatedTeams() && !main.gameVariablesManager.getVariable("randomiseTeams").getBooleanValue()){
                 p.getInventory().setItem(8, ItemCreator.create(Material.BANNER, (byte) 15, ChatColor.GOLD + "Choisir une équipe"));
             }
         }
