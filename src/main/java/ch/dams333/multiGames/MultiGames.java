@@ -10,7 +10,11 @@ import ch.dams333.multiGames.commands.DebugStartCommand;
 import ch.dams333.multiGames.commands.ValidCommand;
 import ch.dams333.multiGames.core.game.GameManager;
 import ch.dams333.multiGames.core.teams.TeamsManager;
+import ch.dams333.multiGames.listeners.actions.game.AnvilEvent;
+import ch.dams333.multiGames.listeners.actions.game.ArmorEquip;
+import ch.dams333.multiGames.listeners.actions.game.BreakOre;
 import ch.dams333.multiGames.listeners.actions.game.ChangeDimension;
+import ch.dams333.multiGames.listeners.actions.game.EnchantEvent;
 import ch.dams333.multiGames.listeners.actions.game.ItemInteract;
 import ch.dams333.multiGames.listeners.actions.setup.ChatEvent;
 import ch.dams333.multiGames.listeners.actions.setup.SetupItemInteract;
@@ -58,6 +62,10 @@ public class MultiGames extends JavaPlugin{
         getServer().getPluginManager().registerEvents(new ChangeDimension(this), this);
         getServer().getPluginManager().registerEvents(new AppleDrop(this), this);
         getServer().getPluginManager().registerEvents(new FlintDrop(this), this);
+        getServer().getPluginManager().registerEvents(new BreakOre(this), this);
+        getServer().getPluginManager().registerEvents(new ArmorEquip(this), this);
+        getServer().getPluginManager().registerEvents(new AnvilEvent(this), this);
+        getServer().getPluginManager().registerEvents(new EnchantEvent(this), this);
 
         getCommand("valid").setExecutor(new ValidCommand(this));
         getCommand("debugstart").setExecutor(new DebugStartCommand(this));

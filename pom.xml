@@ -64,6 +64,13 @@
             <systemPath>D:\root\Files\Dev\Java\MC\Servers\serveurTest\spigot.jar</systemPath>
         </dependency>
         <dependency>
+            <groupId>com.codingforcookies</groupId>
+            <artifactId>armorequip</artifactId>
+            <scope>system</scope>
+            <version>1.7.2</version>
+            <systemPath>D:\root\Files\Dev\Java\MC\Servers\serveurTest\plugins\ArmorEquip.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>ch.dams333.inventoryHelper</groupId>
             <artifactId>InventoryHelper</artifactId>
             <version>1.0.0</version>
