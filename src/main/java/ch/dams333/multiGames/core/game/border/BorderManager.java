@@ -1,5 +1,7 @@
 package ch.dams333.multiGames.core.game.border;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.WorldBorder;
 import org.bukkit.event.EventHandler;
@@ -36,6 +38,7 @@ public class BorderManager implements Listener {
     @EventHandler
     public void time(GameUpdateTimeEvent e){
         if(e.getTime() == main.gameVariablesManager.getVariable("startBorderTime").getIntValue()){
+            Bukkit.broadcastMessage(ChatColor.RED + "La bordure commence à réduire");
             border.setSize(main.gameVariablesManager.getVariable("stopBorderSize").getIntValue() * 2, main.gameVariablesManager.getVariable("stopBorderTime").getIntValue() - main.gameVariablesManager.getVariable("startBorderTime").getIntValue());
         }
         this.size = Integer.parseInt(String.valueOf(Math.round(border.getSize() / 2)));
