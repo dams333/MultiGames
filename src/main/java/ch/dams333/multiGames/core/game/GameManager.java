@@ -13,6 +13,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 
 import ch.dams333.multiGames.MultiGames;
 import ch.dams333.multiGames.core.game.border.BorderManager;
@@ -162,6 +166,22 @@ public class GameManager {
     }
 
     private void finishStarting(boolean debug) {
+        org.bukkit.scoreboard.ScoreboardManager manager = Bukkit.getScoreboardManager();
+        Scoreboard board = manager.getNewScoreboard();
+
+        Objective objective =board.registerNewObjective("showhealth", "health");
+        for(Player online : Bukkit.getOnlinePlayers()){
+            online.setScoreboard(board);
+            Score score = objective.getScore(online.getName());
+            score.setScore(20);
+        }
+        if(main.gameVariablesManager.getVariable("viewHeadHealth").getBooleanValue()){
+            objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+        }
+        if(main.gameVariablesManager.getVariable("viewTabHealth").getBooleanValue()){
+            objective.setDisplaySlot(DisplaySlot.PLAYER_LIST);
+        }
+
         for(Player p : Bukkit.getOnlinePlayers()){
             if(main.gameVariablesManager.getVariable("delayPVP").getBooleanValue()){
                 p.getAttribute(org.bukkit.attribute.Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4.0D);
@@ -238,6 +258,13 @@ public class GameManager {
 
     public boolean isAlive(Player p) {
         return this.inGamePlayers.contains(p);
+    }
+
+    public boolean isDisconnected(Player p) {
+        return false;
+    }
+
+    public void reconnect(Player p) {
     }
     
 }

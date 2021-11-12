@@ -1,6 +1,7 @@
 package ch.dams333.multiGames.listeners.connection;
 
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,6 +25,7 @@ public class joinServer implements Listener{
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
         Player p = e.getPlayer();
+        e.setJoinMessage("");
         if(main.gameStateManager.isState(GameState.SETUP)){
             //Game setupping
             p.getInventory().clear();
@@ -39,7 +41,22 @@ public class joinServer implements Listener{
             if(main.teamsManager.activatedTeams() && !main.gameVariablesManager.getVariable("randomiseTeams").getBooleanValue()){
                 p.getInventory().setItem(8, ItemCreator.create(Material.BANNER, (byte) 15, ChatColor.GOLD + "Choisir une équipe"));
             }
+        }else if(main.gameStateManager.isState(GameState.GAME) || main.gameStateManager.isState(GameState.END)){
+            if(main.gameManager.isDisconnected(p)){
+                main.gameManager.reconnect(p);
+            }else{
+                if(main.gameVariablesManager.getVariable("activateSpec").getBooleanValue()){
+                    p.teleport(new Location(main.gameManager.getGameWorld(), 0, 80, 0));
+                    p.getInventory().clear();
+                    p.setGameMode(GameMode.SPECTATOR);
+                }else{
+                    p.kickPlayer("Les spectateurs ne sont pas autorisés lors de cette partie");
+                }
+            }
+        }else{
+            p.kickPlayer("Veuillez attendre que la partie démarre avant de vous connecter en tant que spectateur !");
         }
+        
     }
 
 }
