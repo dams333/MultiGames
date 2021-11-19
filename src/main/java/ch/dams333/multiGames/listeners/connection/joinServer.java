@@ -14,11 +14,11 @@ import ch.dams333.multiGames.utils.items.ItemCreator;
 import ch.dams333.multiGames.utils.state.GameState;
 import net.md_5.bungee.api.ChatColor;
 
-public class joinServer implements Listener{
+public class JoinServer implements Listener{
     
     private MultiGames main;
 
-    public joinServer(MultiGames main) {
+    public JoinServer(MultiGames main) {
         this.main = main;
     }
 

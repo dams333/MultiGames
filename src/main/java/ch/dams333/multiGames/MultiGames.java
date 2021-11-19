@@ -18,7 +18,8 @@ import ch.dams333.multiGames.listeners.actions.game.EnchantEvent;
 import ch.dams333.multiGames.listeners.actions.game.ItemInteract;
 import ch.dams333.multiGames.listeners.actions.setup.ChatEvent;
 import ch.dams333.multiGames.listeners.actions.setup.SetupItemInteract;
-import ch.dams333.multiGames.listeners.connection.joinServer;
+import ch.dams333.multiGames.listeners.connection.JoinServer;
+import ch.dams333.multiGames.listeners.connection.LeaveServer;
 import ch.dams333.multiGames.listeners.damage.PlayerDamage;
 import ch.dams333.multiGames.listeners.damage.PlayerDamageByEntity;
 import ch.dams333.multiGames.listeners.drop.AppleDrop;
@@ -53,7 +54,7 @@ public class MultiGames extends JavaPlugin{
         gameManager = new GameManager(this);
         teamsManager = new TeamsManager(this);
 
-        getServer().getPluginManager().registerEvents(new joinServer(this), this);
+        getServer().getPluginManager().registerEvents(new JoinServer(this), this);
         getServer().getPluginManager().registerEvents(new SetupItemInteract(this), this);
         getServer().getPluginManager().registerEvents(new ChatEvent(this), this);
         getServer().getPluginManager().registerEvents(new PlayerDamage(this), this);
@@ -66,6 +67,8 @@ public class MultiGames extends JavaPlugin{
         getServer().getPluginManager().registerEvents(new ArmorEquip(this), this);
         getServer().getPluginManager().registerEvents(new AnvilEvent(this), this);
         getServer().getPluginManager().registerEvents(new EnchantEvent(this), this);
+        getServer().getPluginManager().registerEvents(new LeaveServer(this), this);
+        getServer().getPluginManager().registerEvents(gameManager, this);
 
         getCommand("valid").setExecutor(new ValidCommand(this));
         getCommand("debugstart").setExecutor(new DebugStartCommand(this));

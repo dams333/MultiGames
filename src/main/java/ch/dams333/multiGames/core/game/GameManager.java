@@ -1,7 +1,10 @@
 package ch.dams333.multiGames.core.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,6 +13,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -25,10 +30,12 @@ import ch.dams333.multiGames.core.game.tasks.StartingTask;
 import ch.dams333.multiGames.core.scoreboard.ScoreboardManager;
 import ch.dams333.multiGames.core.teams.Team;
 import ch.dams333.multiGames.utils.events.GameStartEvent;
+import ch.dams333.multiGames.utils.events.PlayerLeaveEvent;
+import ch.dams333.multiGames.utils.events.PlayerRejoinEvent;
 import ch.dams333.multiGames.utils.show.TitleUtils;
 import ch.dams333.multiGames.utils.state.GameState;
 
-public class GameManager {
+public class GameManager implements Listener{
 
     private MultiGames main;
 
@@ -37,6 +44,8 @@ public class GameManager {
     private World gameWorld;
     private List<Player> inGamePlayers;
     private int starterPlayerCount;
+
+    private Map<UUID, Player> disconnected;
 
     public int getStarterPlayerCount() {
         return this.starterPlayerCount;
@@ -48,6 +57,7 @@ public class GameManager {
         main.getServer().getPluginManager().registerEvents(borderManager, main);
         scoreboardManager = new ScoreboardManager(main);
         inGamePlayers = new ArrayList<>();
+        this.disconnected = new HashMap<>();
     }
 
     private StartingTask startingTask;
@@ -261,10 +271,28 @@ public class GameManager {
     }
 
     public boolean isDisconnected(Player p) {
-        return false;
+        return this.disconnected.keySet().contains(p.getUniqueId());
+    }
+
+    @EventHandler
+    public void leave(PlayerLeaveEvent e){
+        if(main.gameVariablesManager.getVariable("reconnectionTime").getIntValue() > 0){
+            this.disconnected.put(e.getPlayer().getUniqueId(), e.getPlayer());
+            Bukkit.broadcastMessage(e.getPlayer().getDisplayName() + ChatColor.GOLD + " s'est déconnecté. Il a " + main.gameVariablesManager.getVariable("reconnectionTime").getIntValue() + " secondes pour se reconnecter");
+        }else{
+            this.killPlayer(e.getPlayer());
+        }
     }
 
     public void reconnect(Player p) {
+        Player ancienPlayer = this.disconnected.get(p.getUniqueId());
+        this.inGamePlayers.remove(ancienPlayer);
+        this.inGamePlayers.add(p);
+        this.disconnected.remove(p.getUniqueId());
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerRejoinEvent(p, ancienPlayer));
+    }
+
+    private void killPlayer(Player player) {
     }
     
 }
