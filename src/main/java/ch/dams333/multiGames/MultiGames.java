@@ -69,6 +69,7 @@ public class MultiGames extends JavaPlugin{
         getServer().getPluginManager().registerEvents(new EnchantEvent(this), this);
         getServer().getPluginManager().registerEvents(new LeaveServer(this), this);
         getServer().getPluginManager().registerEvents(gameManager, this);
+        getServer().getPluginManager().registerEvents(teamsManager, this);
 
         getCommand("valid").setExecutor(new ValidCommand(this));
         getCommand("debugstart").setExecutor(new DebugStartCommand(this));

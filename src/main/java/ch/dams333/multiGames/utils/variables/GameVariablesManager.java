@@ -119,7 +119,7 @@ public class GameVariablesManager {
         this.variables.add(new GameVariable("scoreboard", new HashMap<Integer, String>()));
         this.variables.add(new GameVariable("gameName", "Custom Game"));
         this.variables.add(new GameVariable("activateSpec", true));
-        this.variables.add(new GameVariable("reconnectionTime", 60));
+        this.variables.add(new GameVariable("reconnectionTime", 5));
     }
 
     public GameVariable getVariable(String name){

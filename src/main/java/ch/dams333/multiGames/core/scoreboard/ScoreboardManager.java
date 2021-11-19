@@ -12,6 +12,8 @@ import org.bukkit.event.Listener;
 
 import ch.dams333.multiGames.MultiGames;
 import ch.dams333.multiGames.utils.events.GameUpdateTimeEvent;
+import ch.dams333.multiGames.utils.events.PlayerLeaveEvent;
+import ch.dams333.multiGames.utils.events.PlayerRejoinEvent;
 import ch.dams333.multiGames.utils.time.TimeUtils;
 import fr.mrmicky.fastboard.FastBoard;
 
@@ -103,5 +105,24 @@ public class ScoreboardManager implements Listener{
         }
     }
 
+    @EventHandler
+    public void leave(PlayerLeaveEvent e){
+        if(this.boards.keySet().contains(e.getPlayer())){
+            this.boards.get(e.getPlayer()).delete();
+            this.boards.remove(e.getPlayer());
+        }
+    }
+
+    @EventHandler
+    public void rejoin(PlayerRejoinEvent e){
+        List<String> viewScoreboard = getScoreboard(0);
+
+        if(viewScoreboard.size() > 0){
+            FastBoard board = new FastBoard(e.getPlayer());
+            board.updateTitle(MultiGames.INSTANCE.gameVariablesManager.getVariable("gameName").getStringValue().replaceAll("&", "§"));
+            board.updateLines(viewScoreboard);
+            boards.put(e.getPlayer(), board);
+        }
+    }
     
 }

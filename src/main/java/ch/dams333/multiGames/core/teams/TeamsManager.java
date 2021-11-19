@@ -10,11 +10,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import ch.dams333.multiGames.MultiGames;
+import ch.dams333.multiGames.utils.events.PlayerRejoinEvent;
 import ch.dams333.multiGames.utils.items.ItemCreator;
 
-public class TeamsManager {
+public class TeamsManager implements Listener{
     
     private MultiGames main;
 
@@ -168,6 +171,17 @@ public class TeamsManager {
 
     private int random(int min, int max){
         return (int)(Math.random() * ((max - min) + 1)) + min;
+    }
+
+    @EventHandler
+    public void rejoin(PlayerRejoinEvent e){
+        for(Team team : this.teams){
+            if(team.getPlayers().contains(e.getAncienPlayer())){
+                team.removePlayer(e.getAncienPlayer());
+                team.addPlayer(e.getPlayer());
+                break;
+            }
+        }
     }
 
 }

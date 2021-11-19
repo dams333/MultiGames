@@ -42,6 +42,7 @@ public class JoinServer implements Listener{
                 p.getInventory().setItem(8, ItemCreator.create(Material.BANNER, (byte) 15, ChatColor.GOLD + "Choisir une équipe"));
             }
         }else if(main.gameStateManager.isState(GameState.GAME) || main.gameStateManager.isState(GameState.END)){
+            //Game
             if(main.gameManager.isDisconnected(p)){
                 main.gameManager.reconnect(p);
             }else{

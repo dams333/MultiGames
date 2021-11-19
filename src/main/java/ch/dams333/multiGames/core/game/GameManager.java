@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -26,10 +27,12 @@ import org.bukkit.scoreboard.Scoreboard;
 import ch.dams333.multiGames.MultiGames;
 import ch.dams333.multiGames.core.game.border.BorderManager;
 import ch.dams333.multiGames.core.game.tasks.GameTask;
+import ch.dams333.multiGames.core.game.tasks.ReconnectTask;
 import ch.dams333.multiGames.core.game.tasks.StartingTask;
 import ch.dams333.multiGames.core.scoreboard.ScoreboardManager;
 import ch.dams333.multiGames.core.teams.Team;
 import ch.dams333.multiGames.utils.events.GameStartEvent;
+import ch.dams333.multiGames.utils.events.PlayerDieEvent;
 import ch.dams333.multiGames.utils.events.PlayerLeaveEvent;
 import ch.dams333.multiGames.utils.events.PlayerRejoinEvent;
 import ch.dams333.multiGames.utils.show.TitleUtils;
@@ -46,6 +49,7 @@ public class GameManager implements Listener{
     private int starterPlayerCount;
 
     private Map<UUID, Player> disconnected;
+    private List<ReconnectTask> reconnectTasks;
 
     public int getStarterPlayerCount() {
         return this.starterPlayerCount;
@@ -58,6 +62,7 @@ public class GameManager implements Listener{
         scoreboardManager = new ScoreboardManager(main);
         inGamePlayers = new ArrayList<>();
         this.disconnected = new HashMap<>();
+        this.reconnectTasks = new ArrayList<>();
     }
 
     private StartingTask startingTask;
@@ -279,12 +284,23 @@ public class GameManager implements Listener{
         if(main.gameVariablesManager.getVariable("reconnectionTime").getIntValue() > 0){
             this.disconnected.put(e.getPlayer().getUniqueId(), e.getPlayer());
             Bukkit.broadcastMessage(e.getPlayer().getDisplayName() + ChatColor.GOLD + " s'est déconnecté. Il a " + main.gameVariablesManager.getVariable("reconnectionTime").getIntValue() + " secondes pour se reconnecter");
+            ReconnectTask reconnectTask = new ReconnectTask(main, e.getPlayer().getUniqueId(), e.getPlayer().getLocation(), e.getPlayer().getInventory());
+            reconnectTask.runTaskTimer(main, 20, 20);
+            this.reconnectTasks.add(reconnectTask);
         }else{
-            this.killPlayer(e.getPlayer());
+            this.killByID(e.getPlayer().getUniqueId(), e.getPlayer().getLocation(), e.getPlayer().getInventory(), "est mort à cause de sa déconnexion", null);
         }
     }
 
     public void reconnect(Player p) {
+        for(ReconnectTask task : this.reconnectTasks){
+            if(task.isPlayer(p)){
+                task.cancel();
+                this.disconnected.remove(p.getUniqueId());
+                this.reconnectTasks.remove(task);
+                break;
+            }
+        }
         Player ancienPlayer = this.disconnected.get(p.getUniqueId());
         this.inGamePlayers.remove(ancienPlayer);
         this.inGamePlayers.add(p);
@@ -292,7 +308,53 @@ public class GameManager implements Listener{
         Bukkit.getServer().getPluginManager().callEvent(new PlayerRejoinEvent(p, ancienPlayer));
     }
 
-    private void killPlayer(Player player) {
+    public void killByID(UUID uuid, Location location, PlayerInventory inv, String reason, Player killer){
+        for(ReconnectTask task : this.reconnectTasks){
+            if(task.getPlayerID().equals(uuid)){
+                task.cancel();
+                this.reconnectTasks.remove(task);
+                this.disconnected.remove(uuid);
+                break;
+            }
+        }
+        Player p = null;
+        for(Player pl : this.inGamePlayers){
+            if(pl.getUniqueId().equals(uuid)){
+                p = pl;
+                break;
+            }
+        }
+        if(Bukkit.getPlayer(uuid) != null){
+            if(main.gameVariablesManager.getVariable("activateSpec").getBooleanValue()){
+                Bukkit.getPlayer(uuid).setHealth(20);
+                Bukkit.getPlayer(uuid).setFoodLevel(20);
+                Bukkit.getPlayer(uuid).setGameMode(GameMode.SPECTATOR);
+                Bukkit.getPlayer(uuid).getInventory().clear();
+            }else{
+                Bukkit.getPlayer(uuid).kickPlayer("Les spectateurs ne sont pas autorisés lors de cette partie");
+            }
+        }
+        if(p != null){
+            this.inGamePlayers.remove(p);
+            for(ItemStack it : inv.getContents()){
+                if(it != null){
+                    location.getWorld().dropItemNaturally(location, it);
+                }
+            }
+            if(main.gameVariablesManager.getVariable("announceDeath").getBooleanValue()){
+                if(!main.gameVariablesManager.getVariable("announceKiller").getBooleanValue())
+                {
+                    Bukkit.broadcastMessage(p.getDisplayName() + ChatColor.RED + " est mort");
+                }else{
+                    Bukkit.broadcastMessage(p.getDisplayName() + ChatColor.RED + " " + reason);
+                }
+            }
+        }
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerDieEvent(uuid, killer));
+    }
+
+    public void killPlayer(Player player, String reason, Player killer) {
+        this.killByID(player.getUniqueId(), player.getLocation(), player.getInventory(), reason, killer);
     }
     
 }
